@@ -36,9 +36,13 @@ public class FXMLController {
     void doCalcolaCombinazione(ActionEvent event) {
     	
     	Set<Esame> voti;
+    	long start;
+    	long end;
     		try {
+    			start = System.currentTimeMillis();
     			int numeroCrediti = Integer.parseInt(txtInput.getText());
     			voti = model.calcolaSottoinsiemeEsamiIntelligente(numeroCrediti);
+    			end = System.currentTimeMillis();
     			
     		} catch (NumberFormatException e) {
     			txtResult.setText("Inserire un numero di crediti > 0");
@@ -46,12 +50,12 @@ public class FXMLController {
     		}
     		
     		if (voti.isEmpty()) {
-    			txtResult.setText("Impossibile trovare una combinazione di esami con questi crediti!");
+    			txtResult.setText("Impossibile trovare una combinazione di esami con questi crediti! "+" ("+ (end-start) +" ms)");
     			return;
     		}
     		int mediaPer100 = (int) (model.mediaVoti(voti)*100);
     		double media = (double) mediaPer100/100;
-    		txtResult.setText("Ecco la migliore combinazione: ("+media+")\n");
+    		txtResult.setText("Ecco la migliore combinazione: ("+media+") "+ (end-start) +" ms)\n");
     		for (Esame e : voti) {
     			txtResult.appendText(e.getNomeCorso()+" "+e.getCrediti()+" "+e.getVoto()+"\n");
     		}
