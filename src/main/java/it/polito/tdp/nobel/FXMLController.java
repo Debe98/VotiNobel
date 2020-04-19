@@ -34,13 +34,29 @@ public class FXMLController {
 
     @FXML
     void doCalcolaCombinazione(ActionEvent event) {
+    	
+    	Set<Esame> voti;
     		try {
     			int numeroCrediti = Integer.parseInt(txtInput.getText());
-    			Set<Esame> voti = model.calcolaSottoinsiemeEsami(numeroCrediti);
+    			voti = model.calcolaSottoinsiemeEsamiIntelligente(numeroCrediti);
     			
     		} catch (NumberFormatException e) {
     			txtResult.setText("Inserire un numero di crediti > 0");
+    			return;
     		}
+    		
+    		if (voti.isEmpty()) {
+    			txtResult.setText("Impossibile trovare una combinazione di esami con questi crediti!");
+    			return;
+    		}
+    		int mediaPer100 = (int) (model.mediaVoti(voti)*100);
+    		double media = (double) mediaPer100/100;
+    		txtResult.setText("Ecco la migliore combinazione: ("+media+")\n");
+    		for (Esame e : voti) {
+    			txtResult.appendText(e.getNomeCorso()+" "+e.getCrediti()+" "+e.getVoto()+"\n");
+    		}
+    		
+    			
     }
 
     @FXML
